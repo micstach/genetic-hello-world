@@ -51,19 +51,23 @@ var child = function (a, b) {
     newValue = 127; 
 
   child[randpos] = String.fromCharCode(newValue);
-  console.log("Child: " + child + " [" + distance(child, target) + "]");
+  //console.log("Child: " + child + " [" + distance(child, target) + "]");
 
   return child;
 }
 
 var d = 1000;//distance(population[0], population[1]);
 
-for (var g=0; g<10; g++) {
+for (var g=0; g<1000; g++) {
   var childs = [];
   var weights = [];
 
   for (var j=0; j<population.length; j++) {
     for (var k=j+1; k<population.length; k++) {
+      if (population[k] == undefined)
+      {
+        console.log("ups")
+      }
       var c = child(population[j], population[k]);
 
       if (c == undefined) {
@@ -73,12 +77,17 @@ for (var g=0; g<10; g++) {
       //if (weight <= d) {
         if (childs.length > 0) {
           var wlen = weights.length;
+          var added = false;
           for (var w=0; w<wlen;w++) {
-            if (weight < weights[w]) {
+            if (weight < weights[w] && !added) {
               weights.splice(w, 0, weight);
               childs.splice(w, 0, c);//{value: c, w: weight});
-              break;
+              added = true;
             }
+          }
+          if (!added) {
+            childs.push(c)
+            weights.push(weight)
           }
         } else {
           childs.push(c)
@@ -88,12 +97,12 @@ for (var g=0; g<10; g++) {
     }
   }
 
-  var popLen = population.length;
+  var popLen = Math.min(childs.length, 32);
   population = [];
   for (var s=0; s<popLen; s++) {
     population.push(childs[s]);
   }
-  d = Math.min(d, weights[population.length-1]);
+  d = Math.min(d, weights[(popLen-1)]);
  
   console.log("Population count: " + population.length + " [" + g + ":" + d + "]")
 }
