@@ -1,12 +1,12 @@
-maxPopulationSize = 48;
+maxPopulationSize = 64;
 
 var target = "Michal Stachanczyk"
 var targetChanged = false;
 var population = ["QACSDFASFGREGTdsad", 
-                  "ujsroaqFdsdREGocnw",
-                  "fsdfrreWDASAWEdhup",
-                  "fsdfrreqweSAWEdsaS",
-                  "fsdfrreWDASGFDdsaS"];
+                  "QACSAFASFGREGTdsad",
+                  "QACSDFASGGREGTdsad",
+                  "QACSDFASFGREGDdsad",
+                  "QACSDFASFGREGTdsak"];
 
 var distance = function(a, b) {
   var minLength = Math.min(a.length, b.length)
@@ -80,26 +80,24 @@ for (var g=0; g<10000; g++) {
         console.log("undefined child");
       }
       var weight = distance(target, c);
-      //if (weight <= d) {
-        if (childs.length > 0) {
-          var wlen = weights.length;
-          var added = false;
-          for (var w=0; w<wlen;w++) {
-            if (weight < weights[w] && !added) {
-              weights.splice(w, 0, weight);
-              childs.splice(w, 0, c);//{value: c, w: weight});
-              added = true;
-            }
+      if (childs.length > 0) {
+        var wlen = weights.length;
+        var added = false;
+        for (var w=0; w<wlen;w++) {
+          if (weight < weights[w] && !added) {
+            weights.splice(w, 0, weight);
+            childs.splice(w, 0, c);//{value: c, w: weight});
+            added = true;
           }
-          if (!added) {
-            childs.push(c)
-            weights.push(weight)
-          }
-        } else {
+        }
+        if (!added) {
           childs.push(c)
           weights.push(weight)
         }
-      //}
+      } else {
+        childs.push(c)
+        weights.push(weight)
+      }
     }
   }
 
