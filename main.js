@@ -1,4 +1,4 @@
-maxPopulationSize = 64;
+maxPopulationSize = 16;
 
 var target = "Michal Stachanczyk"
 var targetChanged = false;
@@ -69,9 +69,7 @@ var childMid = function (a, b) {
   return mutation(child);
 }
 
-var d = 10000;//distance(population[0], population[1]);
-
-for (var g=0; g<10000; g++) {
+for (var generation=0; generation<10000; generation++) {
   var childs = [];
   var weights = [];
 
@@ -107,23 +105,25 @@ for (var g=0; g<10000; g++) {
   for (var s=0; s<popLen; s++) {
     population.push(childs[s]);
   }
-  d = Math.abs(weights[(popLen-1)]);
- 
 
-  console.log("Population count: " + population.length + " [" + g + ":" + d + "]")
+  // population adaptation rank
+  var adaptationRank = Math.abs(weights[(popLen-1)]);
+ 
+  console.log("Population count: " + population.length + " [" + generation + ": " + adaptationRank + "]")
   console.log('Representative - best: ' + population[0]);
   console.log('Representative - least: ' + population[population.length-1]);
 
-  if (d < 50 && !targetChanged) {
+  if (adaptationRank < 128 && !targetChanged) {
     target = "Stachanczyk Michal";
     targetChanged = true;
   }
 
-  if (d == 0 && targetChanged) {
+  if (adaptationRank <= 64 && targetChanged) {
     break;
   }
 }
 
-//console.log("Distance: " + distance(population[0], population[1]))
-//console.log("Child: " + child(population[0], population[1]))
-
+// final population
+for (var i=0; i<population.length; i++) {
+  console.log('individual: ' + population[i]);  
+}
