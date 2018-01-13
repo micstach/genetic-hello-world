@@ -1,10 +1,12 @@
-var target = "Michal Stachanczyk"
+maxPopulationSize = 48;
 
+var target = "Michal Stachanczyk"
+var targetChanged = false;
 var population = ["QACSDFASFGREGTdsad", 
                   "ujsroaqFdsdREGocnw",
-                  "fsdfrreWDASAWEdsaS",
-                  "fgfdsdeWDASjgfdsaS",
-                  "asachanczyk yichal"];
+                  "fsdfrreWDASAWEdhup",
+                  "fsdfrreqweSAWEdsaS",
+                  "fsdfrreWDASGFDdsaS"];
 
 var distance = function(a, b) {
   var minLength = Math.min(a.length, b.length)
@@ -62,7 +64,7 @@ var child = function (a, b) {
 
 var d = 10000;//distance(population[0], population[1]);
 
-for (var g=0; g<1000; g++) {
+for (var g=0; g<10000; g++) {
   var childs = [];
   var weights = [];
 
@@ -101,19 +103,24 @@ for (var g=0; g<1000; g++) {
     }
   }
 
-  var popLen = Math.min(childs.length, 32);
+  var popLen = Math.min(childs.length, maxPopulationSize);
   population = [];
   for (var s=0; s<popLen; s++) {
     population.push(childs[s]);
   }
-  d = Math.min(d, weights[(popLen-1)]);
+  d = Math.abs(weights[(popLen-1)]);
  
 
   console.log("Population count: " + population.length + " [" + g + ":" + d + "]")
   console.log('Representative - best: ' + population[0]);
   console.log('Representative - least: ' + population[population.length-1]);
 
-  if (d == 0) {
+  if (d < 50 && !targetChanged) {
+    target = "Stachanczyk Michal";
+    targetChanged = true;
+  }
+
+  if (d == 0 && targetChanged) {
     break;
   }
 }
