@@ -26,9 +26,34 @@ String.prototype.replaceAt=function(index, replacement) {
   return this.substr(0, index) + replacement+ this.substr(index + replacement.length);
 }
 
-var child = function (a, b) {  
-  var mid = a.length / 2;
+var mutation = function(a) {
+  var randpos = Math.round(Math.random() * (a.length - 1.0));
 
+  if (randpos > a.length - 1) {
+    randpos = a.length - 1;
+  }
+
+  var newValue = a.charCodeAt(randpos) + (2.0 - Math.random() * 4.0);
+
+  if (newValue < 32)
+    newValue = 32;
+  else if (newValue > 127)
+    newValue = 127; 
+
+  return a.replaceAt(randpos, String.fromCharCode(newValue));
+};
+
+var childMix = function (a, b) {  
+  var child = "";
+  for (var i=0; i<a.length; i++) {
+    var randValue = (1.0 - (Math.random() * 2.0)) > 0.0; 
+    child += (randValue) ? a[i]: b[i];
+  }
+  return mutation(child);
+}
+
+var childMid = function (a, b) {  
+  var mid = a.length / 2;
   var child = "";
   var i=0;
   for (; i<mid; i++) {
@@ -41,25 +66,7 @@ var child = function (a, b) {
     child += b[i];
   }
 
-  var randpos = Math.round(Math.random() * (a.length - 1.0));
-
-  if (randpos > a.length - 1) {
-    randpos = a.length - 1;
-  }
-
-  var newValue = child.charCodeAt(randpos) + (2.0 - Math.random() * 4.0);
-  if (newValue < 32)
-    newValue = 32;
-  else if (newValue > 127)
-    newValue = 127; 
-
-  //console.log("Child O: " + child + " [" + distance(child, target) + "] " + randpos +":"+child[randpos] + "->" + String.fromCharCode(newValue));
-  //console.log(child[randpos]);
-  child = child.replaceAt(randpos, String.fromCharCode(newValue));
-  //console.log(child[randpos]);
-  //console.log("Child M: " + child + " [" + distance(child, target) + "]");
-
-  return child;
+  return mutation(child);
 }
 
 var d = 10000;//distance(population[0], population[1]);
@@ -70,16 +77,10 @@ for (var g=0; g<10000; g++) {
 
   for (var j=0; j<population.length; j++) {
     for (var k=j+1; k<population.length; k++) {
-      if (population[k] == undefined)
-      {
-        console.log("ups")
-      }
-      var c = child(population[j], population[k]);
+      var c = childMix(population[j], population[k]);
 
-      if (c == undefined) {
-        console.log("undefined child");
-      }
       var weight = distance(target, c);
+
       if (childs.length > 0) {
         var wlen = weights.length;
         var added = false;
