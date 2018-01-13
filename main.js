@@ -4,7 +4,7 @@ var population = ["QACSDFASFGREGTdsad",
                   "ujsroaqFdsdREGocnw",
                   "fsdfrreWDASAWEdsaS",
                   "fgfdsdeWDASjgfdsaS",
-                  "Stachanczyk Michal"];
+                  "asachanczyk yichal"];
 
 var distance = function(a, b) {
   var minLength = Math.min(a.length, b.length)
@@ -17,10 +17,11 @@ var distance = function(a, b) {
     distance += Math.abs(parseInt(valA) - parseInt(valB))
   }
 
-  for (var i=0; i<maxLength-minLength; i++){
-    distance += 255;
-  }
   return distance;
+}
+
+String.prototype.replaceAt=function(index, replacement) {
+  return this.substr(0, index) + replacement+ this.substr(index + replacement.length);
 }
 
 var child = function (a, b) {  
@@ -44,19 +45,22 @@ var child = function (a, b) {
     randpos = a.length - 1;
   }
 
-  var newValue = child.charCodeAt(randpos) + (1.0 + Math.random() * 2.0);
+  var newValue = child.charCodeAt(randpos) + (2.0 - Math.random() * 4.0);
   if (newValue < 32)
     newValue = 32;
   else if (newValue > 127)
     newValue = 127; 
 
-  child[randpos] = String.fromCharCode(newValue);
-  //console.log("Child: " + child + " [" + distance(child, target) + "]");
+  //console.log("Child O: " + child + " [" + distance(child, target) + "] " + randpos +":"+child[randpos] + "->" + String.fromCharCode(newValue));
+  //console.log(child[randpos]);
+  child = child.replaceAt(randpos, String.fromCharCode(newValue));
+  //console.log(child[randpos]);
+  //console.log("Child M: " + child + " [" + distance(child, target) + "]");
 
   return child;
 }
 
-var d = 1000;//distance(population[0], population[1]);
+var d = 10000;//distance(population[0], population[1]);
 
 for (var g=0; g<1000; g++) {
   var childs = [];
@@ -71,7 +75,7 @@ for (var g=0; g<1000; g++) {
       var c = child(population[j], population[k]);
 
       if (c == undefined) {
-        console.log("undefijned child");
+        console.log("undefined child");
       }
       var weight = distance(target, c);
       //if (weight <= d) {
@@ -104,7 +108,14 @@ for (var g=0; g<1000; g++) {
   }
   d = Math.min(d, weights[(popLen-1)]);
  
+
   console.log("Population count: " + population.length + " [" + g + ":" + d + "]")
+  console.log('Representative - best: ' + population[0]);
+  console.log('Representative - least: ' + population[population.length-1]);
+
+  if (d == 0) {
+    break;
+  }
 }
 
 //console.log("Distance: " + distance(population[0], population[1]))
